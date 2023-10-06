@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TodoItem } from "../components/TodoItem";
 import prisma from "../db";
 
 function getTodos() {
@@ -10,7 +11,7 @@ function getTodos() {
 export default async function Home() {
   // array
   const todos = await getTodos();
-  prisma.todo.create({ data: { title: "test", complete: false } });
+  // prisma.todo.create({ data: { title: "tests", complete: false } });
 
   return (
     <>
@@ -29,7 +30,7 @@ export default async function Home() {
       <ul className="pl-4">
         {/* Call todos const and render list (li) items showing the todo title from prisma */}
         {todos.map((todo) => (
-          <li key={todo.id}>{todo.title}</li>
+          <TodoItem key={todo.id} {...todo} />
         ))}
       </ul>
     </>
