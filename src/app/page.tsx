@@ -1,9 +1,15 @@
 import Link from "next/link";
 import { TodoItem } from "../components/TodoItem";
-import prisma from "../db";
+import prisma from "@/src/db";
 
 function getTodos() {
   return prisma.todo.findMany();
+}
+
+async function toggleTodo(id: string, complete: boolean) {
+  "use server";
+
+  await prisma.todo.update({ where: { id }, data: { complete } });
 }
 
 // Next js allows us to directly call server instead of using fetch or query
@@ -11,7 +17,7 @@ function getTodos() {
 export default async function Home() {
   // array
   const todos = await getTodos();
-  // prisma.todo.create({ data: { title: "tests", complete: false } });
+  //prisma.todo.create({ data: { title: "tests", complete: false } });
 
   return (
     <>
@@ -30,7 +36,7 @@ export default async function Home() {
       <ul className="pl-4">
         {/* Call todos const and render list (li) items showing the todo title from prisma */}
         {todos.map((todo) => (
-          <TodoItem key={todo.id} {...todo} />
+          <TodoItem key={todo.id} {...todo} toggleTodo={toggleTodo} />
         ))}
       </ul>
     </>
